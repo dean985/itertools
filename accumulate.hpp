@@ -2,15 +2,25 @@
 
 namespace itertools
 {
-    
+    typedef struct
+    {
+        template <typename T>
+        T operator()(T a, T b)
+        {
+            return a + b;
+        }
+    } add;
     template <typename Container, typename Ftor = add>
-    
+
     class accumulate
     {
     private:
-         Container _container;
-         Ftor _f;
-        
+        Container _container;
+        Ftor _f;
+
+    public:
+        accumulate(Container container, Ftor f = add()) : _container(container), _f(f) {}
+
         class iterator
         {
         public:
@@ -20,9 +30,9 @@ namespace itertools
             typename Container::iterator _iterator;
             typename Container::iterator _end;
             Ftor _fIter;
-            iterator(typename Container::iterator i , typename Container::iterator end, Ftor f) :
-                    _iterator(i), _end(end), _f(f) {sum = 0;}
-            
+            iterator(typename Container::iterator i, typename Container::iterator end, Ftor f) : 
+            _iterator(i), _end(end), _fIter(f) { sum = 0; }
+
             auto operator*() const
             {
                 return _element;
@@ -32,7 +42,7 @@ namespace itertools
                 //value++;
                 return *this;
             }
-            iterator operator++(int)/// obj++3
+            iterator operator++(int) /// obj++3
             {
                 // iterator temp(*this);
                 // operator++();
@@ -40,36 +50,19 @@ namespace itertools
             }
             bool operator!=(iterator const &diff) const
             {
-                return true;//!(value == (diff.value));
+                return false; //!(value == (diff.value));
             }
         };
-        
-        
-    typedef struct{
-        template<typename T>
-        T operator()(T a, T b)
+
+        iterator begin() const
         {
-                return a+b;
-        }
-    } add;
-        
-    public:
-        // accumulate(Con val) : _first((val.begin())), _last((val.end())) {}
-        //accumulate(Container container) : _container(container){ }
-        add a;
-        
-        accumulate(Container container, Ftor f=a) : _container(container), _f(f) {}
-
-        iterator begin() const 
-        { 
-            return itertor(_container.begin(), _container.end(),_f ); 
-            
+            return iterator(_container.begin(), _container.end(), _f);
         }
 
-        iterator end() const { 
-            return itertor(_container.begin(), _container.end(),_f );
-        
+        iterator end() const
+        {
+            return iterator(_container.begin(), _container.end(), _f);
+	   
         }
-
     };
 } // namespace itertools
