@@ -8,7 +8,8 @@ namespace itertools
     private:
         const T _first;
         const T _last;
-        
+
+    public:
         class iterator
         {
         public:
@@ -35,7 +36,6 @@ namespace itertools
             }
         };
 
-    public:
         range(T first, T last) : _first(first), _last(last) {}
 
         iterator begin() const { return iterator(_first); }
