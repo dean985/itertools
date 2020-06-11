@@ -62,7 +62,7 @@ namespace itertools
             {
                 return (false);
             }
-            int operator*()//// I need to make it template
+            decltype(*_iter) operator*()//// I need to make it template
             {
                 return *_iter;
             }
