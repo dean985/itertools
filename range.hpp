@@ -6,15 +6,17 @@ namespace itertools
     class range
     {
     private:
-        const T _first;
-        const T _last;
+        T _first;
+        T _last;
 
     public:
+        range(T first, T last) : _first(first), _last(last) {}
         class iterator
         {
         public:
             T value;
             iterator(T v) : value(v) {}
+            iterator(iterator &copy) = default;
             T operator*() const
             {
                 return value;
@@ -35,8 +37,6 @@ namespace itertools
                 return !(value == (diff.value));
             }
         };
-
-        range(T first, T last) : _first(first), _last(last) {}
 
         iterator begin() const { return iterator(_first); }
 
