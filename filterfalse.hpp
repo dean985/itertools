@@ -48,7 +48,7 @@ namespace itertools
             }
             bool operator!=(const iterator &it)
             {
-                return (false);
+                return false;
             }
             int operator*()
             {
