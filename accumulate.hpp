@@ -2,6 +2,7 @@
 
 namespace itertools
 {
+    
     typedef struct
     {
         template <typename T>
@@ -10,59 +11,69 @@ namespace itertools
             return a + b;
         }
     } add;
-    template <typename Container, typename Ftor = add>
-
+    
+    template <typename Container,typename Ftor = add>
     class accumulate
     {
-    private:
+        Ftor _fnctor = [](int x, int y){return x*y;};
         Container _container;
-        Ftor _f;
 
     public:
-        accumulate(Container container, Ftor f = add()) : _container(container), _f(f) {}
+        accumulate(Container cont, Ftor func) : _fnctor(func), _container(cont) {}
+        accumulate(Container cont):_fnctor(add()), _container(cont)  { }
 
         class iterator
         {
-        public:
-            // T value;//use the iterator.begin()* to get the element
-            int sum;
-            decltype(*(_container.begin())) _element;
-            typename Container::iterator _iterator;
+            typename Container::iterator _iter;
             typename Container::iterator _end;
-            Ftor _fIter;
-            iterator(typename Container::iterator i, typename Container::iterator end, Ftor f) : 
-            _iterator(i), _end(end), _fIter(f) { sum = 0; }
+            Ftor ftor;
 
-            auto operator*() const
+        public:
+            iterator(typename Container::iterator iter,
+                     typename Container::iterator end,
+                     Ftor functor) : _iter(iter), _end(end), ftor(functor)
             {
-                return _element;
+                // while (ftor(*_iter) && _iter != _end)
+                // {
+                //     _iter++;
+                // }
+            }
+            
+
+            iterator(iterator &copy) = default;
+
+            iterator &operator=(const iterator &it)
+            {
+                return *this;
             }
             iterator &operator++()
             {
-                //value++;
                 return *this;
             }
-            iterator operator++(int) /// obj++3
+            iterator operator++(int a)
             {
-                // iterator temp(*this);
-                // operator++();
-                return this;
+                return *this;
             }
-            bool operator!=(iterator const &diff) const
+            bool operator==(const iterator &it)
             {
-                return false; //!(value == (diff.value));
+                return false;
+            }
+            bool operator!=(const iterator &it)
+            {
+                return (false);
+            }
+            int operator*()//// I need to make it template
+            {
+                return *_iter;
             }
         };
-
-        iterator begin() const
+        iterator begin()
         {
-            return iterator(_container.begin(), _container.end(), _f);
+            return iterator(_container.begin(), _container.end(), _fnctor);
         }
-
-        iterator end() const
+        iterator end()
         {
-            return iterator(_container.begin(), _container.end(), _f);
-	   
+            return iterator(_container.end(), _container.end(), _fnctor);
         }
     };
 } // namespace itertools
