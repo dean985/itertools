@@ -40,6 +40,10 @@ auto ftor = [](double x) { multiple_3and2 num;
         powHigher p;
         return num(x) && p(x); };
 
+static multiple_3 f1;
+static multiple_3and2 f2;
+static powHigher f3;
+
 TEST_CASE("Range")
 {
     CHECK_NOTHROW(range(5, 5));
@@ -77,9 +81,11 @@ TEST_CASE("Accumulate")
 TEST_CASE("Filterfalse")
 {
 
-    multiple_3 f1;
-    multiple_3and2 f2;
-    powHigher f3;
+    for (auto i : filterfalse(f1, std::vector{1, 2, 3, 4}))
+    {
+        CHECK(f1(i) == false);
+    }
+
     for (auto i : filterfalse(f1, range(4, 25)))
     {
         CHECK(f1(i) == false);
@@ -92,40 +98,70 @@ TEST_CASE("Filterfalse")
     {
         CHECK(f3(i) == false);
     }
-    for (auto i : filterfalse(f2, std::vector{6,12,24,5,4,-1,-5,88,789,12,7,56,89})){
+    for (auto i : filterfalse(f2, std::vector{6, 12, 24, 5, 4, -1, -5, 88, 789, 12, 7, 56, 89}))
+    {
         CHECK(f2(i) == false);
     }
 }
 
 TEST_CASE("Compress")
 {
-    multiple_3and2 f2;
+    // multiple_3and2 f2;
     std::vector<bool> vec;
-    for (auto i : range(0,60)){
+    for (auto i : range(0, 60))
+    {
         vec.push_back(f2(i));
     }
-    for (auto i: compress(range(0,60),vec)){
+    for (auto i : compress(range(0, 60), vec))
+    {
         CHECK(i % 6 == 0);
     }
+
+    std::vector<bool> odd;
+    for (auto i : range(0, 60))
+    {
+        if (i % 2 == 0)
+        {
+            odd.push_back(false);
+        }
+        else
+        {
+            odd.push_back(true);
+        }
+    }
+
+    for (auto i : compress(range(0, 60), odd))
+    {
+        CHECK(i % 2 == 1);
+    }
+
     /////////////////
     std::string s1 = "ariel university";
     std::vector<bool> v1 = {true, true, true, true, true};
-    for (auto i: range(5,11)){
+    for (auto i : range(0, 11))
+    {
         v1.push_back(false);
     }
-    for (auto i : compress(s1, v1)){
-        bool c = (i >=65 && i<=90) || (i >=97 && i<=122);
+    for (auto i : compress(s1, v1))
+    {
+        bool c = (i >= 65 && i <= 90) || (i >= 97 && i <= 122);
         CHECK(c);
     }
 
     std::string s2 = "Neque porro quisquam est qui dolorem ipsum";
     std::vector<bool> v2;
-    for (int i = 0; i < s2.size() - 5; i++){
+    for (int i = 0; i < s2.size() - 5; i++)
+    {
         v2.push_back(false);
     }
-    
-    for (auto i :compress(s2, v2)){
-        bool c = (i >=65 && i<=90) || (i >=97 && i<=122);
+    for (auto i : range(0, 5))
+    {
+        v2.push_back(true);
+    }
+
+    for (auto i : compress(s2, v2))
+    {
+        bool c = (i >= 65 && i <= 90) || (i >= 97 && i <= 122);
         CHECK(c);
     }
 }
