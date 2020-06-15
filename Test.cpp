@@ -7,8 +7,11 @@
 #include <cmath>
 #include <vector>
 #include <string>
+#include <iterator>
 
 using namespace itertools;
+using namespace std;
+
 //20 tests for each
 //accumulate : 20 tests for each part
 //Checks if a number is a multiple of 3
@@ -69,9 +72,91 @@ TEST_CASE("Range")
 
 TEST_CASE("Accumulate")
 {
+    vector<int> vecInt = {1,2,3,4};
+    vector<string> vecString = {"Hello", "Bye", "Adam"};
+    vector<float> vecFloat = {-1, 0.3, 5.2, -8.3};
+    
+    
     //Part A
+    CHECK_NOTHROW(accumulate(range(5, 5)));
+    CHECK_NOTHROW(accumulate{vecInt});
+    CHECK_NOTHROW(accumulate{vecString});
+    CHECK_NOTHROW(accumulate{vecFloat});
+    
+     ///////////////////
+    int count = 0;
+    for (auto i : accumulate(range(1, 5)))
+    {
+        count++;
+    }
+    CHECK(count == 4);
+    ///////////////////
+         ///////////////////
+    count = 0;
+    for (auto i : accumulate(vecInt))
+    {
+        count++;
+    }
+    CHECK(count == 4);
+    ///////////////////
+    int arr[]={1,3,6,10};
+    int j = 0;
+         auto b = accumulate(vecInt).begin();
+
+     for (int i = 0; i < (sizeof(arr)/sizeof(*arr)) ; i++)
+     {
+          CHECK(*b == arr[j]);
+     }
+     
+     
+     int arr2[]={1,3,6,10};
+     j = 0;
+     auto a = accumulate(vecInt).begin();
+     for (int i = 0; i < (sizeof(arr2)/sizeof(*arr2)) ; i++)
+     {
+          CHECK(*a == arr2[j]);
+     }
+        for (auto i : accumulate(vecInt))
+        {
+            CHECK(i == arr2[j]);
+            j++;
+        }        
+        
+    string arr3[]={"Hello", "HelloBye", "HelloByeAdam"};
+     j = 0;
+     auto c = accumulate(vecString).begin();
+     for (int i = 0; i < (sizeof(arr3)/sizeof(*arr3)) ; i++)
+     {
+         //next(c,1);
+         // CHECK(arr3[j].compare(*c));
+     }
+
+    
+
+
 
     //Part B
+        CHECK_NOTHROW(accumulate(range(5, 5), [](int x,int y){return x+y;}));
+        
+    ///////////////////
+    count = 0;
+    for (auto i : accumulate(vecInt,[](int x,int y){return x+y;}))
+    {
+        count++;
+    }
+    CHECK(count == 4);
+    ///////////////////
+    
+        ///////////////////
+    count = 0;
+    for (auto i : accumulate(range(5, 5),[](int x,int y){return x+y;}))
+    {
+        count++;
+    }
+    CHECK(count == 4);
+    ///////////////////
+
+    
 }
 
 TEST_CASE("Filterfalse")

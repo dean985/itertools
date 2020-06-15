@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 namespace itertools
 {
@@ -24,6 +25,7 @@ namespace itertools
 
         class iterator
         {
+            
             typename Container::iterator _iter;
             typename Container::iterator _end;
             Ftor ftor;
@@ -33,10 +35,8 @@ namespace itertools
                      typename Container::iterator end,
                      Ftor functor) : _iter(iter), _end(end), ftor(functor)
             {
-                // while (ftor(*_iter) && _iter != _end)
-                // {
-                //     _iter++;
-                // }
+                    
+               
             }
             
 
@@ -44,26 +44,44 @@ namespace itertools
 
             iterator &operator=(const iterator &it)
             {
+                this->_iter = it->_iter;
+                this->_end = it->_end;
+                this->ftor = it->ftor;
+                
                 return *this;
             }
             iterator &operator++()
             {
+               do
+                {
+                  ++_iter;
+                } while (_end != _end && !*_end);
                 return *this;
             }
             iterator operator++(int a)
             {
-                return *this;
+                iterator temp(*this);
+                operator++();
+                return temp;           
+                
+    
             }
             bool operator==(const iterator &it)
             {
-                return false;
+              
+                return (it._iter == this->_iter) ;
             }
             bool operator!=(const iterator &it)
             {
-                return (false);
+              // std::cout<<"in !="<<std::endl;
+                return it._iter != this->_iter;
             }
             decltype(*_iter) operator*()//// I need to make it template
             {
+                if (!(*_iter))
+                {
+                  ++(*this);
+                }
                 return *_iter;
             }
         };
