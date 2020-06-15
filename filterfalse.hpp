@@ -1,67 +1,51 @@
-#pragma once
+#include <iterator>
 
-namespace itertools
-{
-    template <typename Ftor, typename Container>
-    class filterfalse
-    {
-        Ftor _fnctor;
-        Container _container;
+namespace itertools {
+template <typename function, typename Container> class filterfalse {
+  Container data;
+  function func;
 
-    public:
-        filterfalse(Ftor func, Container cont) : _fnctor(func), _container(cont) {}
+public:
+  explicit filterfalse(function f, Container x) : data(x), func(f) {}
+  class iterator {
+    typename Container::iterator _iter;
+    typename Container::iterator _it_end;
+    function _it_func;
 
-        class iterator
-        {
-            typename Container::iterator _iter;
-            typename Container::iterator _end;
-            Ftor ftor;
-
-        public:
-            iterator(typename Container::iterator iter,
-                     typename Container::iterator end,
-                     Ftor functor) : _iter(iter), _end(end), ftor(functor)
-            {
-                while (ftor(*_iter) && _iter != _end)
-                {
-                    _iter++;
-                }
-            }
-
-            iterator(iterator &copy) = default;
-
-            iterator &operator=(const iterator &it)
-            {
-                return *this;
-            }
-            iterator &operator++()
-            {
-                return *this;
-            }
-            iterator operator++(int a)
-            {
-                return *this;
-            }
-            bool operator==(const iterator &it)
-            {
-                return false;
-            }
-            bool operator!=(const iterator &it)
-            {
-                return false;
-            }
-            int operator*()
-            {
-                return *_iter;
-            }
-        };
-        iterator begin()
-        {
-            return iterator(_container.begin(), _container.end(), _fnctor);
-        }
-        iterator end()
-        {
-            return iterator(_container.end(), _container.end(), _fnctor);
-        }
+  public:
+    explicit iterator(typename Container::iterator it,
+                      typename Container::iterator end, function func)
+        : _iter(it), _it_end(end), _it_func(func) {
+      while (_iter != _it_end && _it_func(*_iter))
+        ++_iter;
     };
-} // namespace itertools
+    iterator(const iterator &other) = default;
+    iterator &operator=(const iterator &other) {
+      if (&other != this) {
+        iterator(other._iter, other._it_end, other._it_func);
+      }
+      return *this;
+    }
+    iterator &operator++() {
+      ++_iter;
+      while (_iter != _it_end && _it_func(*_iter)) {
+        ++_iter;
+      }
+      return *this;
+    }
+    iterator operator++(int) {
+      iterator temp = *this;
+      ++(*this);
+      return temp;
+    }
+    bool operator==(const iterator &other) { return (_iter == other._iter); }
+    bool operator!=(const iterator &other) { return (_iter != other._iter); }
+
+    auto operator*() { return *_iter; }
+  };
+
+  iterator begin() { return iterator(data.begin(), data.end(), func); }
+  iterator end() { return iterator(data.end(), data.end(), func); }
+};
+
+}; // namespace itertools
