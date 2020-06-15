@@ -29,6 +29,7 @@ namespace itertools
             typename Container::iterator _iter;
             typename Container::iterator _end;
             Ftor ftor;
+            
 
         public:
             iterator(typename Container::iterator iter,
@@ -52,10 +53,12 @@ namespace itertools
             }
             iterator &operator++()
             {
+                auto sum = (*_iter);
                do
                 {
                   ++_iter;
-                } while (_end != _end && !*_end);
+                  sum +=(*_iter);
+                } while (_iter != _end );
                 return *this;
             }
             iterator operator++(int a)
@@ -77,12 +80,10 @@ namespace itertools
                 return it._iter != this->_iter;
             }
             decltype(*_iter) operator*()//// I need to make it template
-            {
-                if (!(*_iter))
-                {
-                  ++(*this);
-                }
-                return *_iter;
+            {// i need to put here somthing that will return
+                
+                
+                return (*_iter);
             }
         };
         iterator begin()
