@@ -27,17 +27,25 @@ namespace itertools
         {
             
             typename Container::iterator _iter;
+            typename Container::iterator _current;
             typename Container::iterator _end;
             Ftor ftor;
-            
+            decltype(*_iter) sum;
 
         public:
             iterator(typename Container::iterator iter,
                      typename Container::iterator end,
-                     Ftor functor) : _iter(iter), _end(end), ftor(functor)
+                     Ftor functor) : _iter(iter), _end(end), _current(_iter), ftor(functor), sum(*_iter)
             {
                     
-               
+            //     sum = (*_iter);
+            //   do
+            //     {
+            //       ++_iter;
+            //       sum = ftor(sum, (*_iter));
+            //     } while (_iter != _end );
+                
+               //std::accumulate(_iter,_end,0);
             }
             
 
@@ -53,22 +61,27 @@ namespace itertools
             }
             iterator &operator++()
             {
-                auto sum = (*_iter);
-               do
+                auto temp_iter = _iter;
+                 sum = (*temp_iter);
+               while ((temp_iter) != _current )
                 {
-                  ++_iter;
-                  sum +=(*_iter);
-                } while (_iter != _end );
-                return *this;
+                  ++temp_iter;
+                  sum = ftor(sum, (*temp_iter));
+                } 
+                
+                ++_current;
+                
+                //_end = temp_iter;
+                
+                return (*this);
             }
             iterator operator++(int a)
             {
                 iterator temp(*this);
                 operator++();
                 return temp;           
-                
-    
             }
+
             bool operator==(const iterator &it)
             {
               
@@ -77,13 +90,12 @@ namespace itertools
             bool operator!=(const iterator &it)
             {
               // std::cout<<"in !="<<std::endl;
-                return it._iter != this->_iter;
+                return it._iter != this->_current;
             }
             decltype(*_iter) operator*()//// I need to make it template
             {// i need to put here somthing that will return
                 
-                
-                return (*_iter);
+                return sum;
             }
         };
         iterator begin()
