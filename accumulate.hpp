@@ -55,33 +55,13 @@ namespace itertools
             iterator &operator++()
             {
                 std::not_equal_to neq;
-                auto temp_iter = _iter;
-                sum = (*temp_iter);
-                ++temp_iter;
-                
-                if((neq(_current, _end)) ){
-                    ++_current;
-                    
-                    for(;neq(temp_iter, _current );++temp_iter)
-                    {
-                    
-                     sum = ftor(sum, (*temp_iter)); 
-
-                    }
-                    if(neq(temp_iter,_end))
-                    {
-                        sum = ftor(sum, (*temp_iter)); 
-                    }
-                    // do
-                    // {
-                    //     sum = ftor(sum, (*temp_iter)); 
-                    //     ++temp_iter;
-                      
-                    // }while (eq(temp_iter, _current ));
-
-                
-                } 
-               
+                 ++_current;
+                 if((neq(_current, _end)) )
+                 {
+                   
+                    sum = ftor(sum, (*_current));
+                 }
+            
 
                 return (*this);
             }
