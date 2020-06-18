@@ -38,14 +38,7 @@ namespace itertools
                      Ftor functor) : _iter(iter), _end(end), _current(_iter), ftor(functor), sum(*_iter)
             {
                     
-            //     sum = (*_iter);
-            //   do
-            //     {
-            //       ++_iter;
-            //       sum = ftor(sum, (*_iter));
-            //     } while (_iter != _end );
-                
-               //std::accumulate(_iter,_end,0);
+        
             }
             
 
@@ -61,18 +54,35 @@ namespace itertools
             }
             iterator &operator++()
             {
+                std::not_equal_to neq;
                 auto temp_iter = _iter;
-                 sum = (*temp_iter);
-               while ((temp_iter) != _current )
-                {
-                  ++temp_iter;
-                  sum = ftor(sum, (*temp_iter));
+                sum = (*temp_iter);
+                ++temp_iter;
+                
+                if((neq(_current, _end)) ){
+                    ++_current;
+                    
+                    for(;neq(temp_iter, _current );++temp_iter)
+                    {
+                    
+                     sum = ftor(sum, (*temp_iter)); 
+
+                    }
+                    if(neq(temp_iter,_end))
+                    {
+                        sum = ftor(sum, (*temp_iter)); 
+                    }
+                    // do
+                    // {
+                    //     sum = ftor(sum, (*temp_iter)); 
+                    //     ++temp_iter;
+                      
+                    // }while (eq(temp_iter, _current ));
+
+                
                 } 
-                
-                ++_current;
-                
-                //_end = temp_iter;
-                
+               
+
                 return (*this);
             }
             iterator operator++(int a)
@@ -85,7 +95,7 @@ namespace itertools
             bool operator==(const iterator &it)
             {
               
-                return (it._iter == this->_iter) ;
+                return (it._iter == this->_current) ;
             }
             bool operator!=(const iterator &it)
             {
