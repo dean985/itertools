@@ -4,6 +4,8 @@
 namespace itertools
 {
     
+
+
     typedef struct
     {
         template <typename T>
@@ -30,15 +32,16 @@ namespace itertools
             typename Container::iterator _current;
             typename Container::iterator _end;
             Ftor ftor;
-            decltype(*_iter) sum;
+            typename std::decay<decltype(*_iter)>::type  sum;
 
         public:
-            iterator(typename Container::iterator iter,
+           explicit  iterator(typename Container::iterator iter,
                      typename Container::iterator end,
-                     Ftor functor) : _iter(iter), _end(end), _current(_iter), ftor(functor), sum(*_iter)
+                     Ftor functor) : _iter(iter), _end(end), _current(_iter), ftor(functor)
             {
                     
-        
+                     if(_iter != _end)
+                        sum = *iter;
             }
             
 
@@ -59,7 +62,7 @@ namespace itertools
                  if((neq(_current, _end)) )
                  {
                    
-                    sum = ftor(sum, (*_current));
+                    sum =  ftor(sum, (*_current));
                  }
             
 
