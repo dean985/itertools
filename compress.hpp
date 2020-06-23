@@ -21,7 +21,14 @@ namespace itertools
     public:
       iterator(typename Container::iterator c_cu, typename Container::iterator c_e,
                typename Bool_Container::iterator b_cu, typename Bool_Container::iterator b_e)
-          : c_current(c_cu), c_end(c_e), b_current(b_cu), b_end(b_e) {}
+          : c_current(c_cu), c_end(c_e), b_current(b_cu), b_end(b_e)
+      {
+        while (c_current != c_end && !(*b_current))
+        {
+          ++c_current;
+          ++b_current;
+        }
+      }
 
       iterator &operator++()
       {
@@ -29,7 +36,7 @@ namespace itertools
         {
           ++b_current;
           ++c_current;
-        } while (b_current != b_end && !*b_current);
+        } while (c_current != c_end && !(*b_current));
         return *this;
       }
       iterator &operator++(int)
@@ -40,18 +47,24 @@ namespace itertools
       }
       iterator &operator=(const iterator &other)
       {
-        if (*this != other)
+        // if (*this != other)
+        // {
+        //   this->c_current = other.c_current;
+        //   this->c_end = other.c_end;
+        //   this->b_current = other.b_current;
+        //   this->b_end = other.b_end;
+        // }
+        // return *this;
+        if (this != &other)
         {
-          this->c_current = other.c_current;
-          this->c_end = other.c_end;
-          this->b_current = other.b_current;
-          this->b_end = other.b_end;
+          iterator(other.c_current, other.c_end, other.b_current, other.b_end);
         }
         return *this;
       }
       bool operator==(const iterator &other) const
       {
         return (c_current == other.c_current) && (b_current == other.b_current);
+        // return (c_current == other.c_current);
       }
       bool operator!=(const iterator &other) const
       {
@@ -59,10 +72,10 @@ namespace itertools
       }
       auto operator*()
       {
-        if (!(*b_current))
-        {
-          ++(*this);
-        }
+        // if (!(*b_current))
+        // {
+        //   ++(*this);
+        // }
         return *c_current;
       }
     };
